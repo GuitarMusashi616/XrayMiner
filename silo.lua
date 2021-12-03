@@ -25,8 +25,8 @@ end
 silo = {
   dict = {},
   chest_names = {},
-  dump_chest = "minecraft:chest_8",
-  pickup_chest = "minecraft:chest_9",
+  dump_chest = "minecraft:chest_9",
+  pickup_chest = "minecraft:chest_8",
 }
 
 local function beginsWith(string, beginning)
@@ -76,7 +76,7 @@ function silo.startup()
 end
 
 function silo.grab(chest_name, slot, stack_size)
-  peripheral.call(silo.pickup_chest, "pullItem", chest_name, slot, stack_size)
+  peripheral.call(silo.pickup_chest, "pullItems", chest_name, slot, stack_size)
 end
 
 -- go through all items and take the specified item until count rem <= 0
@@ -98,15 +98,43 @@ function silo.get_item(item_name, count)
   end
 end
 
+
+function silo.try_to_dump()
+  -- try to suck the slot of dump chest with storage chest
+  for chest_name in all(silo.chest_names) do
+    local bool = peripheral.call(silo.dump_chest, "pullItems", chest_name, 64)
+    if bool then
+      return true
+    end
+  end
+end
+
+-- for all storage chest try to suck everythin in the dump chest
+function silo.dump()
+  local suck_this = peripheral.call(silo.dump_chest, "list")
+  for k,_ in pairs(suck_this) do
+    if silo.try_to_dump() then
+      return true
+    end
+  end
+end
+
 function main()
   if #tArgs == 0 then
     silo.startup()
     t2f(silo.dict)
+  elseif #tArgs==1 and tArgs[1] == "dump" then
+    if silo.dump() then
+      print("Dump chest successfully emptied")
+    else
+      print("Inventory Full: Could not dump the dump chest")
+    end
   elseif #tArgs>=2 and tArgs[1] == "get" then
     local item = tArgs[2]
     assert(item, "must specify item name with silo get")
     local count = tArgs[3] or 1
     silo.get_item(item, count)
+    print(tostring(count).. "x "..tostring(item).. " transferred to pickup chest")
   end
 end
 
