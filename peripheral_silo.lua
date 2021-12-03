@@ -23,3 +23,5 @@ shell = {}
 function shell.run()
   
 end
+
+cc = {shell={completion={}}}

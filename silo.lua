@@ -167,6 +167,10 @@ function main()
       end
     elseif tArgs[1] == "info" then
       silo.get_capacity()
+    elseif tArgs[1] == "search" then
+      print("Usage: silo search <item>")
+    elseif tArgs[1] == "get" then
+      print("Usage: silo get <item> [#]")
     end
   elseif #tArgs>=2 then
     local item = tArgs[2]
@@ -185,9 +189,9 @@ end
 
 -- adding autocompletion --
 function add_autocomplete()
-  local completion = require "cc.shell.completion"
+  local completion = require("cc.shell.completion")
   local complete = completion.build(
-    { completion.choice, { "info", "get", "dump", "search" } },
+    { completion.choice, { "info", "get", "dump", "search" } }
   )
   shell.setCompletionFunction("silo.lua", complete)
 end
