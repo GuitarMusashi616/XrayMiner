@@ -26,21 +26,10 @@ local DIR_TO_ATTR = {
   function(val) turtle.x = turtle.x-val end,
 }
 
-local function backup_dir(dir)
-  local h = io.open("backup_dir", "w")
-  h:write(dir)
-  h:close()
-end
-
-local function get_dir_backup()
-  local h = io.open("backup_dir", "r")
-  local string = h:read()
-  h:close()
-  return string
-end
-
 function modulus_incr(num, amount, divisor)
-  local res = num + amount
+  
+  local res = num-1
+  res = res + amount
   res = res % divisor
   res = res + 1
   return res
@@ -56,6 +45,13 @@ end
 
 function turtle.getDir()
   return DIRECTIONS[turtle.dir]
+end
+
+function turtle.xyz()
+  print("x: "..tostring(turtle.x))
+  print("y: "..tostring(turtle.y))
+  print("z: "..tostring(turtle.z))
+  print("dir: "..tostring(turtle.getDir()))
 end
 
 function turtle.forward()
@@ -96,6 +92,11 @@ function turtle.turnLeft()
   end
 end
 
+for key, func in pairs(slurtle) do
+  if not turtle[key] then
+    turtle[key] = func
+  end
+end
 
 
 
