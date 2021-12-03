@@ -1,3 +1,5 @@
+local tArgs = {...}
+
 if io.open("peripheral_silo.lua", "r") then
   require("peripheral_silo")
 end
@@ -23,6 +25,8 @@ end
 silo = {
   dict = {},
   chest_names = {},
+  dump_chest = "minecraft:chest_8",
+  pickup_chest = "minecraft:chest_9",
 }
 
 local function beginsWith(string, beginning)
@@ -46,7 +50,7 @@ end
 -- scan through all connected chests and add to table
 function silo.find_chests()
   for name in all(peripheral.getNames()) do
-    if beginsWith(name, "minecraft:chest") then
+    if name ~= silo.dump_chest and name ~= silo.pickup_chest then
       table.insert(silo.chest_names, name)
     end
   end
@@ -70,9 +74,33 @@ function silo.startup()
   silo.update_all_items()
 end
 
-
-silo.startup()
-for k,v in pairs(silo.dict) do
-  print(k,v)
+-- go through all items and take the specified item until count rem <= 0
+function silo.get_item(item_name, count)
+  local rem = count
+  silo.find_chests()
+  for name in all(silo.chest_names) do
+    local items = peripheral.call(name, "list")
+    for i,item in pairs(items) do
+      if item.name == name then
+        local amount = math.min(64, rem)
+        silo.grab(name, i, amount)
+        rem = rem - amount
+        if rem <= 0 then
+          break
+        end
+      end
+    end
+  end
 end
---t2f(silo.dict)
+
+function main()
+  if not tArgs[1] then
+    silo.startup()
+    t2f(silo.dict)
+  elseif tArgs[1] == "get" then
+    local item = tArgs[2]
+    assert(item, "must specify item name with silo get")
+    local count = tArgs[3] or 1
+    silo.get_item(item, count)
+  end
+end
