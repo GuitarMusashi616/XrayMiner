@@ -103,7 +103,7 @@ end
 function silo.try_to_dump(slot)
   -- try to suck the slot of dump chest with storage chest
   for chest_name in all(silo.chest_names) do
-    local bool = peripheral.call(silo.dump_chest, "pullItems", chest_name, slot, 64)
+    local bool = peripheral.call(silo.dump_chest, "pushItems", chest_name, slot, 64)
     if bool then
       return true
     end
