@@ -96,7 +96,6 @@ function silo.get_item(item_name, count)
       end
     end
   end
-  return rem
 end
 
 
@@ -134,8 +133,8 @@ function main()
     local item = tArgs[2]
     assert(item, "must specify item name with silo get")
     local count = tArgs[3] or 1
-    local rem = silo.get_item(item, count)
-    print(tostring(count-rem).. "x "..tostring(item).. " transferred to pickup chest")
+    silo.get_item(item, count)
+    print(tostring(item).. " transferred to pickup chest")
   end
 end
 
