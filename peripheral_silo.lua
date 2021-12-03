@@ -13,3 +13,13 @@ function peripheral.call(a,b)
     return example_chest
   end
 end
+
+textutils = {}
+function textutils.serialize()
+  
+end
+
+shell = {}
+function shell.run()
+  
+end
