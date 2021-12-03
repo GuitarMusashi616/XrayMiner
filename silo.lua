@@ -25,8 +25,8 @@ end
 silo = {
   dict = {},
   chest_names = {},
-  dump_chest = "minecraft:chest_9",
-  pickup_chest = "minecraft:chest_8",
+  dump_chest = "minecraft:chest_9", -- specify name of chest here
+  pickup_chest = "minecraft:chest_8", -- also here
 }
 
 local function beginsWith(string, beginning)
@@ -72,7 +72,6 @@ end
 
 function silo.startup()
   silo.find_chests()
-  silo.update_all_items()
 end
 
 function silo.grab(chest_name, slot, stack_size)
@@ -82,7 +81,6 @@ end
 -- go through all items and take the specified item until count rem <= 0
 function silo.get_item(item_name, count)
   local rem = count
-  silo.find_chests()
   for chest_name in all(silo.chest_names) do
     local items = peripheral.call(chest_name, "list")
     for i,item in pairs(items) do
@@ -120,8 +118,9 @@ function silo.dump()
 end
 
 function main()
+  silo.startup()
   if #tArgs == 0 then
-    silo.startup()
+    silo.update_all_items()
     t2f(silo.dict)
   elseif #tArgs==1 and tArgs[1] == "dump" then
     if silo.dump() then
