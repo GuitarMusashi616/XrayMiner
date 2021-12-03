@@ -1,3 +1,5 @@
+-- works perfectly as is
+
 local lexer = {
   i = 1,
   words = {"fd", "5", "bk", "1", "lt", "rt", "fd"},

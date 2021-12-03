@@ -1,3 +1,5 @@
+-- works perfectly as is
+
 local tArgs = {...}
 
 if io.open("peripheral_silo.lua", "r") then
@@ -81,10 +83,11 @@ end
 -- go through all items and take the specified item until count rem <= 0
 function silo.get_item(item_name, count)
   local rem = count
+  item_name = item_name:lower()
   for chest_name in all(silo.chest_names) do
     local items = peripheral.call(chest_name, "list")
     for i,item in pairs(items) do
-      if item.name == item_name then
+      if item.name:find(item_name) then
         local amount = math.min(64, rem)
         silo.grab(chest_name, i, amount)
         rem = rem - amount
@@ -116,6 +119,14 @@ function silo.dump()
     end
   end
   return true
+end
+
+function silo.search(item_name)
+  item_name = item_name:lower()
+  for name in all(silo.chest_names) do
+    local items = peripheral.call(name, "list")
+    forEach(items, function(item) if item.name:find(item_name) then silo.add(item) end)
+  end
 end
 
 function main()
