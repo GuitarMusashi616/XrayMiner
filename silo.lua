@@ -140,12 +140,18 @@ function main()
     else
       print("Inventory Full: Could not dump the dump chest")
     end
-  elseif #tArgs>=2 and tArgs[1] == "get" then
+  elseif #tArgs>=2 then
     local item = tArgs[2]
-    assert(item, "must specify item name with silo get")
+    assert(item, "must specify item name with that command")
     local count = tArgs[3] or 1
-    silo.get_item(item, count)
-    print(tostring(item).. " transferred to pickup chest")
+    
+    if tArgs[1] == "search" then
+      silo.search(item)
+      t2f(silo.dict)
+    elseif tArgs[1] == "get" then
+      silo.get_item(item, count)
+      print(tostring(item).. " transferred to pickup chest")
+    end
   end
 end
 
