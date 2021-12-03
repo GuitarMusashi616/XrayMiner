@@ -51,7 +51,7 @@ end
 function silo.find_chests()
   silo.chest_names = {}
   for name in all(peripheral.getNames()) do
-    if beginsWith(silo.chest_names, "minecraft:chest") and name ~= silo.dump_chest and name ~= silo.pickup_chest then
+    if beginsWith(name, "minecraft:chest") and name ~= silo.dump_chest and name ~= silo.pickup_chest then
       table.insert(silo.chest_names, name)
     end
   end
