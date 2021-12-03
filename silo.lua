@@ -49,8 +49,9 @@ end
 
 -- scan through all connected chests and add to table
 function silo.find_chests()
+  silo.chest_names = {}
   for name in all(peripheral.getNames()) do
-    if name ~= silo.dump_chest and name ~= silo.pickup_chest then
+    if beginsWith(silo.chest_names, "minecraft:chest") and name ~= silo.dump_chest and name ~= silo.pickup_chest then
       table.insert(silo.chest_names, name)
     end
   end
