@@ -96,13 +96,14 @@ function silo.get_item(item_name, count)
       end
     end
   end
+  return rem
 end
 
 
-function silo.try_to_dump()
+function silo.try_to_dump(slot)
   -- try to suck the slot of dump chest with storage chest
   for chest_name in all(silo.chest_names) do
-    local bool = peripheral.call(silo.dump_chest, "pullItems", chest_name, 64)
+    local bool = peripheral.call(silo.dump_chest, "pullItems", chest_name, slot, 64)
     if bool then
       return true
     end
@@ -113,7 +114,7 @@ end
 function silo.dump()
   local suck_this = peripheral.call(silo.dump_chest, "list")
   for k,_ in pairs(suck_this) do
-    if silo.try_to_dump() then
+    if silo.try_to_dump(k) then
       return true
     end
   end
@@ -133,8 +134,8 @@ function main()
     local item = tArgs[2]
     assert(item, "must specify item name with silo get")
     local count = tArgs[3] or 1
-    silo.get_item(item, count)
-    print(tostring(count).. "x "..tostring(item).. " transferred to pickup chest")
+    local rem = silo.get_item(item, count)
+    print(tostring(count-rem).. "x "..tostring(item).. " transferred to pickup chest")
   end
 end
 
