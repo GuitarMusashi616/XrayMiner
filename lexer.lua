@@ -1,15 +1,18 @@
 -- works perfectly as is
+local tArgs = {...}
+
 
 local lexer = {
   i = 1,
-  words = {"fd", "5", "bk", "1", "lt", "rt", "fd"},
+  words = tArgs,
   lexeme_to_func = {
-    fd=function(a) print("forward " .. tostring(a)) end,
-    bk=function(a) print("back "..tostring(a)) end,
-    lt=function(a) print("left "..tostring(a)) end,
-    rt=function(a) print("right "..tostring(a)) end,
-    sel=function(a) end,
-    pldn=function(a) end,
+    fd=turtle.forward,
+    bk=turtle.back,
+    lt=function(a) for i=1,a do turtle.turnLeft() end end,
+    rt=function(a) for i=1,a do turtle.turnRight() end end,
+    sel=turtle.select,
+    pl=turtle.placeDown,
+    plfd = function(a) for i=1,a do turtle.placeDown() turtle.forward() end end,
   }
 }
 
@@ -57,5 +60,3 @@ end
 while not lexer.is_finished() do
   lexer.next_token()
 end
-
-
