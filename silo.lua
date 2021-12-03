@@ -1,4 +1,8 @@
-local function all(tbl) 
+if io.open("peripheral_silo.lua", "r") then
+  require("peripheral_silo")
+end
+
+function all(tbl) 
   local prev_k = nil
   return function()
     local k,v = next(tbl, prev_k)
@@ -7,7 +11,7 @@ local function all(tbl)
   end
 end
 
-local function inc_tbl(tbl, key, val)
+function inc_tbl(tbl, key, val)
   assert(key, "key cannot be false or nil")
   val = val or 1
   if not tbl[key] then
@@ -25,7 +29,7 @@ local function beginsWith(string, beginning)
   return string:sub(1,#beginning) == beginning
 end
 
-local function forEach(tbl, func)
+function forEach(tbl, func)
   for val in all(tbl) do
     func(val)
   end
@@ -61,15 +65,6 @@ function silo.update_all_items()
   end
 end
 
-function test_begins_with()
-  local tbl = {"bottom", "minecraft:chest_7", "top", "right", "minecraft:chest_0", "left"}
-  for name in all(tbl) do
-    if beginsWith(name, "minecraft:chest") then
-      print(name)
-    end
-  end
-end
-
 function silo.startup()
   silo.find_chests()
   silo.update_all_items()
@@ -77,4 +72,7 @@ end
 
 
 silo.startup()
-t2f(silo.dict)
+for k,v in pairs(silo.dict) do
+  print(k,v)
+end
+--t2f(silo.dict)
