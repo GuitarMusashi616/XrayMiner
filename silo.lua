@@ -97,11 +97,11 @@ function silo.get_item(item_name, count)
 end
 
 
-function silo.try_to_dump(slot)
+function silo.try_to_dump(slot, count)
   -- try to suck the slot of dump chest with storage chest
   for chest_name in all(silo.chest_names) do
-    local bool = peripheral.call(silo.dump_chest, "pushItems", chest_name, slot, 64)
-    if bool then
+    local num = peripheral.call(silo.dump_chest, "pushItems", chest_name, slot, count)
+    if num >= count then
       return true
     end
   end
@@ -110,8 +110,8 @@ end
 -- for all storage chest try to suck everythin in the dump chest
 function silo.dump()
   local suck_this = peripheral.call(silo.dump_chest, "list")
-  for k,_ in pairs(suck_this) do
-    if not silo.try_to_dump(k) then
+  for k,v in pairs(suck_this) do
+    if not silo.try_to_dump(k,v.count) then
       return false
     end
   end
