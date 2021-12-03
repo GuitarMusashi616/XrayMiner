@@ -1,7 +1,12 @@
 -- works perfectly as is
 
+-- connect chests to computer with wired modems
+-- specify name of dump chest and pickup chest (all the other chests will be used as storage)
+local DUMP_CHEST_NAME = "minecraft:chest_9"
+local PICKUP_CHEST_NAME = "minecraft:chest_8"
 local tArgs = {...}
 
+-- used for testing in IDE
 if io.open("peripheral_silo.lua", "r") then
   require("peripheral_silo")
 end
@@ -24,11 +29,11 @@ function inc_tbl(tbl, key, val)
   tbl[key] = tbl[key] + val
 end
 
-silo = {
+local silo = {
   dict = {},
   chest_names = {},
-  dump_chest = "minecraft:chest_9", -- specify name of chest here
-  pickup_chest = "minecraft:chest_8", -- also here
+  dump_chest = DUMP_CHEST_NAME,
+  pickup_chest = PICKUP_CHEST_NAME,
 }
 
 local function beginsWith(string, beginning)
@@ -99,9 +104,8 @@ function silo.get_item(item_name, count)
   end
 end
 
-
+-- try to suck the slot of dump chest with storage chests
 function silo.try_to_dump(slot, count)
-  -- try to suck the slot of dump chest with storage chest
   for chest_name in all(silo.chest_names) do
     local num = peripheral.call(silo.dump_chest, "pushItems", chest_name, slot, count)
     if num >= count then
@@ -129,16 +133,38 @@ function silo.search(item_name)
   end
 end
 
+function silo.get_capacity()
+  local total_slots = 0
+  local used_slots = 0
+  local used_items = 0
+  
+  for name in all(silo.chest_names) do
+    total_slots = total_slots + peripheral.call(name, "size")
+    local items = peripheral.call(name, "list")
+    used_slots = used_slots + #items
+    forEach(items, function(item) used_items = used_items + item.count end)
+  end
+  
+  
+  print("slots used ".. tostring(used_slots) .. "/" .. tostring(total_slots))
+  print("items stored "..tostring(used_items) .. "/" .. tostring(total_slots*64))
+  
+end
+
 function main()
   silo.startup()
   if #tArgs == 0 then
     silo.update_all_items()
     t2f(silo.dict)
-  elseif #tArgs==1 and tArgs[1] == "dump" then
-    if silo.dump() then
-      print("Dump chest successfully emptied")
-    else
-      print("Inventory Full: Could not dump the dump chest")
+  elseif #tArgs==1 then
+    if tArgs[1] == "dump" then
+      if silo.dump() then
+        print("Dump chest successfully emptied")
+      else
+        print("Inventory Full: Could not dump the dump chest")
+      end
+    elseif tArgs[1] == "info" then
+      silo.get_capacity()
     end
   elseif #tArgs>=2 then
     local item = tArgs[2]
