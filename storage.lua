@@ -90,6 +90,9 @@ function storage.collect(item_name, count, height, side)
   storage.go_to_height(height)
   local rem = count
   local items = peripheral.call(side, "list")
+  if not items then
+    return
+  end
   for i,item in pairs(items) do
     if item.name == item_name then
       local amount_to_take = math.min(count, 64)
