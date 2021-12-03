@@ -105,7 +105,7 @@ end
 function storage.retrieve(item_name, count)
   storage.go_to_floor()
   local rem_requested = count
-  for i=1,storage.max_height do
+  for height=1,storage.max_height do
     for side in all(SIDES) do
       storage.collect(item_name, count, height, side)
     end
