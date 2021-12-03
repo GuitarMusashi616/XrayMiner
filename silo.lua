@@ -95,13 +95,15 @@ function silo.get_item(item_name, count)
 end
 
 function main()
-  if not tArgs[1] then
+  if #tArgs == 0 then
     silo.startup()
     t2f(silo.dict)
-  elseif tArgs[1] == "get" then
+  elseif #tArgs>=2 and tArgs[1] == "get" then
     local item = tArgs[2]
     assert(item, "must specify item name with silo get")
     local count = tArgs[3] or 1
     silo.get_item(item, count)
   end
 end
+
+main()
