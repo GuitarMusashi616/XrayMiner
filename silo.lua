@@ -125,7 +125,7 @@ function silo.search(item_name)
   item_name = item_name:lower()
   for name in all(silo.chest_names) do
     local items = peripheral.call(name, "list")
-    forEach(items, function(item) if item.name:find(item_name) then silo.add(item) end)
+    forEach(items, function(item) if item.name:find(item_name) then silo.add(item) end end)
   end
 end
 
