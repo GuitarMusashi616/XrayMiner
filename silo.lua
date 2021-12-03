@@ -11,6 +11,7 @@ if io.open("peripheral_silo.lua", "r") then
   require("peripheral_silo")
 end
 
+-- helper functions --
 function all(tbl) 
   local prev_k = nil
   return function()
@@ -29,13 +30,6 @@ function inc_tbl(tbl, key, val)
   tbl[key] = tbl[key] + val
 end
 
-local silo = {
-  dict = {},
-  chest_names = {},
-  dump_chest = DUMP_CHEST_NAME,
-  pickup_chest = PICKUP_CHEST_NAME,
-}
-
 local function beginsWith(string, beginning)
   return string:sub(1,#beginning) == beginning
 end
@@ -53,6 +47,15 @@ function t2f(tbl, filename)
   h:close()
   shell.run("edit "..tostring(filename))
 end
+
+
+-- silo singleton code --
+local silo = {
+  dict = {},
+  chest_names = {},
+  dump_chest = DUMP_CHEST_NAME,
+  pickup_chest = PICKUP_CHEST_NAME,
+}
 
 -- scan through all connected chests and add to table
 function silo.find_chests()
@@ -145,12 +148,11 @@ function silo.get_capacity()
     forEach(items, function(item) used_items = used_items + item.count end)
   end
   
-  
   print("slots used ".. tostring(used_slots) .. "/" .. tostring(total_slots))
   print("items stored "..tostring(used_items) .. "/" .. tostring(total_slots*64))
-  
 end
 
+-- main command handling --
 function main()
   silo.startup()
   if #tArgs == 0 then
@@ -181,4 +183,14 @@ function main()
   end
 end
 
+-- adding autocompletion --
+function add_autocomplete()
+  local completion = require "cc.shell.completion"
+  local complete = completion.build(
+    { completion.choice, { "info", "get", "dump", "search" } },
+  )
+  shell.setCompletionFunction("silo.lua", complete)
+end
+
+add_autocomplete()
 main()
