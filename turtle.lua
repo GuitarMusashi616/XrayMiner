@@ -5,18 +5,6 @@ if io.open("peripheral_silo.lua", "r") then
 end
 
 local slurtle = turtle
-setmetatable(turtle, slurtle)
-slurtle.__index = slurtle
-
-local DIRECTIONS = {"north","east","south","west"}
-
--- maps direction name to attr affected when moving forward that direction
-local DIR_TO_ATTR = {
-  {turtle,"z",-1},
-  {turtle,"x",1},
-  {turtle,"z",1},
-  {turtle,"x",-1},
-}
 
 -- note: wont keep track of coords unless starting dir is initialized
 turtle = {
@@ -24,6 +12,18 @@ turtle = {
   y = 0,
   z = 0,
   dir = 1,
+}
+setmetatable(turtle, slurtle)
+slurtle.__index = slurtle
+
+local DIRECTIONS = {"north","east","south","west"}
+
+-- maps direction name to attr affected when moving forward that direction
+local DIR_TO_ATTR = {
+  function(val) turtle.z = turtle.z-val end,
+  function(val) turtle.x = turtle.x+val end,
+  function(val) turtle.z = turtle.z+val end,
+  function(val) turtle.x = turtle.x-val end,
 }
 
 local function backup_dir(dir)
@@ -39,10 +39,11 @@ local function get_dir_backup()
   return string
 end
 
-function modulus_incr(tbl, key, amount, divisor)
-  tbl[key] = tbl[key] + amount
-  tbl[key] = tbl[key] % divisor
-  tbl[key] = tbl[key] + 1
+function modulus_incr(num, amount, divisor)
+  local res = num + amount
+  res = res % divisor
+  res = res + 1
+  return res
 end
 
 function turtle.reset(dir,x,y,z)
@@ -59,15 +60,15 @@ end
 
 function turtle.forward()
   if slurtle.forward() then
-    local tbl,key,val = unpack(DIR_TO_ATTR[turtle.dir])
-    tbl[key] = tbl[key] + val
+    local func = DIR_TO_ATTR[turtle.dir]
+    func(1)
   end
 end
 
 function turtle.back()
   if slurtle.back() then
-    local tbl,key,val = unpack(DIR_TO_ATTR[turtle.dir])
-    tbl[key] = tbl[key] - val
+    local func = DIR_TO_ATTR[turtle.dir]
+    func(-1)
   end
 end
 
@@ -85,13 +86,13 @@ end
 
 function turtle.turnRight()
   if slurtle.turnRight() then
-    modulus_incr(turtle, "dir", 1, #DIRECTIONS)
+    turtle.dir = modulus_incr(turtle.dir, 1, #DIRECTIONS)
   end
 end
 
 function turtle.turnLeft()
   if slurtle.turnLeft() then
-    modulus_incr(turtle, "dir", -1, #DIRECTIONS)
+    turtle.dir = modulus_incr(turtle.dir, -1, #DIRECTIONS)
   end
 end
 
