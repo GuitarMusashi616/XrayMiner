@@ -8,6 +8,8 @@ local lexer = {
     bk=function(a) print("back "..tostring(a)) end,
     lt=function(a) print("left "..tostring(a)) end,
     rt=function(a) print("right "..tostring(a)) end,
+    sel=function(a) end,
+    pldn=function(a) end,
   }
 }
 
