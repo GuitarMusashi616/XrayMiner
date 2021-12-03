@@ -111,10 +111,11 @@ end
 function silo.dump()
   local suck_this = peripheral.call(silo.dump_chest, "list")
   for k,_ in pairs(suck_this) do
-    if silo.try_to_dump(k) then
-      return true
+    if not silo.try_to_dump(k) then
+      return false
     end
   end
+  return true
 end
 
 function main()
