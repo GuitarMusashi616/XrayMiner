@@ -159,6 +159,7 @@ function turtle.goToVar(dist, dir)
   if dist < 0 then
     move_func = turtle.back_or_dig
     dist = dist * -1
+  end
   for _=1,dist do
     move_func()
   end
