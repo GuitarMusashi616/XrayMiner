@@ -152,16 +152,16 @@ function turtle.down_or_dig()
   return turtle.down()
 end
 
-function turtle.goToVar(dist, dir)
-  turtle.turnTo(dir)
-  
-  move_func = turtle.forward_or_dig
+function turtle.goToVar(dist, dir_pos, dir_neg)
   if dist < 0 then
-    move_func = turtle.back_or_dig
+    turtle.turnTo(dir_neg)
     dist = dist * -1
+  else
+    turtle.turnTo(dir_pos)
   end
+  
   for _=1,dist do
-    move_func()
+    turtle.forward_or_dig()
   end
 end
 
@@ -178,8 +178,8 @@ function turtle.goToHeight(dist)
 end
 
 function turtle.goTo(x,y,z)
-  turtle.goToVar(z-turtle.z, 3)
-  turtle.goToVar(x-turtle.x, 2)
+  turtle.goToVar(z-turtle.z, 3, 1)
+  turtle.goToVar(x-turtle.x, 2, 4)
   turtle.goToHeight(y-turtle.y)
 end
 
