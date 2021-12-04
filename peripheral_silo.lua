@@ -59,11 +59,11 @@ function turtle.back()
   return true
 end
 function turtle.turnLeft()
-  print("left")
+  print("turn left")
   return true
 end
 function turtle.turnRight()
-  print("right")
+  print("turn right")
   return true
 end
 function turtle.dig()

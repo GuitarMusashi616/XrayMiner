@@ -119,67 +119,60 @@ function turtle.turnLeft()
   return false
 end
 
-function turtle.turnTo(dir)
-  --dir is a num
-  local num = dir - turtle.dir
-  if num == 0 then
-    return
-  elseif num == -3 or num == 1 then
-    turtle.turnRight()
-  elseif num == 3 or num == -1 then
-    turtle.turnLeft()
-  else
-    turtle.turnRight()
+function turtle.turnto(dir)
+  dir = DIR_TO_INDEX[dir]
+  while turtle.dir ~= dir do
     turtle.turnRight()
   end
+end
+
+function turtle.move_or_dig(move_func, break_func)
+  if not move_func() then
+    break_func()
+  end
+  return true
 end
 
 function turtle.forward_or_dig()
-  turtle.dig()
-  return turtle.forward()
+  return turtle.move_or_dig(turtle.forward, turtle.dig)
 end
-
-function turtle.back()
-  return turtle.back()
+function turtle.back_or_dig()
+  return turtle.move_or_dig(turtle.back, function() turtle.turnRight() turtle.dig() turtle.turnRight() end)
 end
-
 function turtle.up_or_dig()
-  turtle.digUp()
-  return turtle.up()
+  return turtle.move_or_dig(turtle.up, turtle.digUp)
 end
 function turtle.down_or_dig()
-  turtle.digDown()
-  return turtle.down()
+  return turtle.move_or_dig(turtle.down, turtle.digDown)
 end
 
-function turtle.goToVar(dist, dir)
-  turtle.turnTo(dir)
-  
-  move_func = turtle.forward_or_dig
-  if dist < 0 then
-    move_func = turtle.back_or_dig
-    dist = dist * -1
-  for _=1,dist do
+function turtle.gotovar(condlt, condgt, forward_case, back_case)
+  while turtle.getDir() ~= forward_case and turtle.getDir() ~= back_case do
+    turtle.turnRight()
+  end
+  local move_func = turtle.getDir() == forward_case and turtle.forward_or_dig or turtle.back_or_dig
+  local ret_func = turtle.getDir() == forward_case and turtle.back_or_dig or turtle.forward_or_dig
+  while condlt() do
     move_func()
   end
-end
-
-function turtle.goToHeight(dist)
-  move_func = turtle.up_or_dig
-  if dist < 0 then
-    move_func = turtle.down_or_dig
-    dist = dist * -1
-  end
-  
-  for _=1,dist do
-    move_func()
+  while condgt() do
+    ret_func()
   end
 end
 
-function turtle.goTo(x,y,z)
-  turtle.goToVar(z-turtle.z, 3)
-  turtle.goToVar(x-turtle.x, 2)
-  turtle.goToHeight(y-turtle.y)
+function turtle.gotoheight(y)
+  while turtle.y < y do
+    turtle.up_or_dig()
+  end
+  while turtle.y > y do
+    turtle.down_or_dig()
+  end
+end
+
+function turtle.go(x,y,z)
+  turtle.gotovar(function() return turtle.z>z end, function() return turtle.z<z end, "north", "south")
+  turtle.gotovar(function() return turtle.x<x end, function() return turtle.x>x end, "east", "west")
+  turtle.gotoheight(y)
 end
 
 for key, func in pairs(slurtle) do
@@ -187,3 +180,5 @@ for key, func in pairs(slurtle) do
     turtle[key] = func
   end
 end
+
+turtle.go(1,2,3)
