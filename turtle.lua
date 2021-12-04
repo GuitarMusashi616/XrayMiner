@@ -1,8 +1,8 @@
 -- extends default turtle api with coord tracking
 
 -- used for testing in IDE
-if io.open("peripheral_silo.lua", "r") then
-  require("peripheral_silo")
+if io.open("peripheral.lua", "r") then
+  require("peripheral")
 end
 
 local slurtle = turtle
