@@ -1,8 +1,8 @@
 # XrayMiner
 Mining Turtle + Geo Scanner = mines straight to diamond
 ~~~
-Usage: xray <direction it's facing> [repeats] -- tunnels 16 blocks forward, then proceeds to mine all ores in an 8 block radius
-   eg. xray  north                   2        -- example where turtle starts facing north, tunnel and xray 2x                     
+Usage: xray <direction> [repeats] -- tunnels 16 blocks forward, then proceeds to mine all ores in an 8 block radius
+       xray  north       2        -- example where turtle starts facing north, then repeats above line 2 times                     
 ~~~
 
 #### Setup:
