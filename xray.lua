@@ -1,7 +1,7 @@
 -- y level 14 diamond miner
 -- messes with turtle library
 
-require("turtle")
+local turtle = require "turtle"
 
 -- mines blocks whose names have these following strings in them
 local TARGETS = {"diamond"}

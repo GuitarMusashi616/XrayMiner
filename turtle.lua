@@ -2,13 +2,13 @@
 
 -- used for testing in IDE
 if io.open("peripheral.lua", "r") then
-  require("peripheral")
+  require "peripheral"
 end
 
 local slurtle = turtle
 
 -- note: wont keep track of coords unless starting dir is initialized
-turtle = {
+local turtle = {
   x = 0,
   y = 0,
   z = 0,
@@ -34,7 +34,7 @@ local DIR_TO_INDEX = {
   west=4
 }
 
-function modulus_incr(num, amount, divisor)
+local function modulus_incr(num, amount, divisor)
   local res = num-1
   res = res + amount
   res = res % divisor
@@ -183,8 +183,10 @@ function turtle.goTo(x,y,z)
   turtle.goToHeight(y-turtle.y)
 end
 
-for key, func in pairs(slurtle) do
-  if not turtle[key] then
-    turtle[key] = func
-  end
-end
+--for key, func in pairs(slurtle) do
+  --if not turtle[key] then
+    --turtle[key] = func
+  --end
+--end
+
+return turtle

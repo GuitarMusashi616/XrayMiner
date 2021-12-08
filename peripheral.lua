@@ -67,21 +67,61 @@ function turtle.turnRight()
   return true
 end
 function turtle.dig()
+  print("dig")
   return true
 end
 
 function turtle.digUp()
+  print("dig up")
   return true
 end
 
 function turtle.digDown()
+  print("dig down")
   return true
 end
 
 function turtle.select(i)
+  print("select "..tostring(i))
   return true
 end
 
-function turtle.placeDown()
+function turtle.getItemCount(i)
+  print("getItemCount "..tostring(i))
+  return math.random(1,10)
+end
+
+function turtle.getItemDetail(i)
+  print("getItemDetail " .. tostring(i))
+  return {name="minecraft:coal", count=63}
+end
+
+function turtle.refuel(i)
+  print("refuel")
   return true
+end
+
+function turtle.getFuelLevel()
+  print("getFuelLevel")
+  return 1000
+end
+
+function turtle.placeDown()
+  print("place down")
+  return true
+end
+
+function turtle.drop()
+  print("drop")
+  return true
+end
+
+function turtle.dropDown()
+  print("drop down")
+  return true
+end
+
+function turtle.inspectDown()
+  print("inspect down")
+  return false, nil
 end
