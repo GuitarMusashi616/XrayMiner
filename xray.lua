@@ -1,5 +1,6 @@
 -- y level 14 diamond miner
 -- messes with turtle library
+-- now working
 
 local turtle = require "turtle"
 

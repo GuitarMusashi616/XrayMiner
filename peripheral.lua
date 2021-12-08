@@ -1,3 +1,4 @@
+-- working
 peripheral = {}
 
 local example_chest = {

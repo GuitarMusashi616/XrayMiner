@@ -1,4 +1,5 @@
 -- extends default turtle api with coord tracking
+-- now working
 
 -- used for testing in IDE
 if io.open("peripheral.lua", "r") then
